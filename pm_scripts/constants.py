@@ -1,5 +1,6 @@
+RESULTS_DIR = './results-docker'
+
 IEEE_LOG = 'logs/log_IEEE.xes'
-IEEE_LOG_COMPLETE = 'logs/log_IEEE_completed.xes'
 
 COMPLETE_STATES = ["Clear Invoice", "Delete Purchase Order Item"]
 

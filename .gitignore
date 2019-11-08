@@ -1,3 +1,7 @@
 results**/*
-logs/BPI_Challenge_2019.csv
-logs/log_IEEE*.xes
+
+logs/*
+!logs/README.txt
+
+.vscode/
+**/*.pyc
