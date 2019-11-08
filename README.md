@@ -36,7 +36,6 @@ two_way_match_log = log_filters.filter_invoice_type(completed_only_log, constant
 #Pick your miner (needs more filtering both on logs and during model creation)
 from pm4py.algo.discovery.alpha import factory as alpha_miner
 utils.save_log_to_dot(two_way_match_log, alpha_miner, 'two_way_invoice')
-
 ```
 
 ### Transform dot to png on host (and view)

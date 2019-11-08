@@ -4,4 +4,4 @@ logs/*
 !logs/README.txt
 
 .vscode/
-**/*.pyc
+**/__pycache__/

@@ -2,6 +2,7 @@ from importlib import import_module
 
 from pm_scripts import constants
 
+from pm4py.objects.log.exporter.xes import factory as xes_exporter
 from pm4py.visualization.petrinet import factory as vis_factory
 
 
@@ -17,11 +18,22 @@ def load_log(log_path):
     return log
 
 
+def save_log_to_xes(log, xes_name):
+    dest_file = _format_file_name_extension(xes_name, "xes")
+    dest_file_path = "{}/{}".format(constants.LOGS_DIR, dest_file)
+    xes_exporter.export_log(log, dest_file_path)
+
+    print("Log saved as: {}".format(dest_file_path))
+
+
 def save_log_to_dot(log, miner, dot_name):
     net, initial_marking, final_marking = miner.apply(log)
     gviz = vis_factory.apply(net, initial_marking, final_marking)
-
-    dest_file = '{}.dot'.format(dot_name)
+    dest_file = _format_file_name_extension(dot_name, "dot")
     gviz.save(dest_file, constants.RESULTS_DIR)
 
-    print('Petrinet saved as: {}/{}'.format(constants.RESULTS_DIR, dest_file))
+    print("Dot saved as: {}/{}".format(constants.RESULTS_DIR, dest_file))
+
+
+def _format_file_name_extension(file_name, extension):
+    return file_name if file_name.endswith(extension) else "{}.{}".format(file_name, extension)
