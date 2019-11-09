@@ -26,16 +26,46 @@ Utalization of [pm4py library](http://pm4py.org/) in order to solve [2019 PM BPI
 + ```docker$ ipython```
 
 ### Mine ieee log in ipython
++ Note: You can allways check log size (number of traces) with ```len(log)```
+
 ```python
 from pm_scripts import constants, log_filters, utils
 
 log = utils.load_log(constants.IEEE_LOG)
 completed_only_log = log_filters.filter_complete_cases(log)
-two_way_match_log = log_filters.filter_invoice_type(completed_only_log, constants.TWO_WAY_MATCHER)
+two_way_log = log_filters.filter_trace_attribute(completed_only_log, constants.INVOICE_TYPE, constants.TWO_WAY_MATCHER)
+
+# Show top trace variants
+log_filters.get_top_n_variants(two_way_log)
+```
+
+```python
+[{'variant': 'Vendor creates invoice,Create Purchase Order Item,Change Approval for Purchase Order,Record Invoice Receipt,Clear Invoice',
+  'count': 76},
+ {'variant': 'Change Approval for Purchase Order,Vendor creates invoice,Change Approval for Purchase Order,Create Purchase Order Item,Change Approval for Purchase Order,Record Invoice Receipt,Clear Invoice',
+  'count': 15},
+ {'variant': 'Change Approval for Purchase Order,Vendor creates invoice,Create Purchase Order Item,Record Invoice Receipt,Clear Invoice',
+  'count': 13}]
+```
+
+```python
+two_way_log_filtered = log_filters.auto_filter_variants(two_way_log)
 
 #Pick your miner (needs more filtering both on logs and during model creation)
 from pm4py.algo.discovery.alpha import factory as alpha_miner
-utils.save_log_to_dot(two_way_match_log, alpha_miner, 'two_way_invoice')
+utils.save_log_to_dot(two_way_log_filtered, alpha_miner, 'two_way_invoice')
+```
+
++ Mine traces with multiple items for one document
+```python
+from pm4py.algo.filtering.log.attributes import attributes_filter
+
+po_stats = attributes_filter.get_trace_attribute_values(two_way_log, 'Purchasing Document')
+po_stats = sorted(po_stats.items(), key=lambda x: x[1], reverse=True)
+multi_item_po_log = log_filters.filter_trace_attribute(two_way_log, 'Purchasing Document', po_stats[0][0])
+
+utils.save_log_to_xes(multi_item_po_log, 'multi_item_po')
+utils.save_log_to_dot(multi_item_po_log, alpha_miner, 'multi_item_po')
 ```
 
 ### Transform dot to png on host (and view)

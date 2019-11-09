@@ -2,6 +2,7 @@ from importlib import import_module
 
 from pm_scripts import constants
 
+from pm4py.objects.log.util import sorting
 from pm4py.objects.log.exporter.xes import factory as xes_exporter
 from pm4py.visualization.petrinet import factory as vis_factory
 
@@ -13,6 +14,7 @@ def load_log(log_path):
 
     log_importer = import_module(full_module_name)
     log = log_importer.import_log(log_path)
+    log = sorting.sort_timestamp(log)
     print("Loaded {} log with {} events".format(log_path, len(log)))
 
     return log
