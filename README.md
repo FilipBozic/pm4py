@@ -88,17 +88,23 @@ host$ ./dot2png_pm4py.sh consignment.dot
 
 
 ### Some numbers
-```
-In [4]: len(two_way_log)                                                                                                                                                     
+```python
+In [11]: len(log)
+Out[11]: 251734
+
+In [12]: len(completed_only_log)
+Out[12]: 189451
+
+In [4]: len(two_way_log)
 Out[4]: 169
 
-In [5]: len(three_way_before_log)                                                                                                                                            
+In [5]: len(three_way_before_log)
 Out[5]: 179318
 
-In [6]: len(three_way_after_log)                                                                                                                                             
+In [6]: len(three_way_after_log)
 Out[6]: 9560
 
-In [7]: len(consignment_log)                                                                                                                                                 
+In [7]: len(consignment_log)
 Out[7]: 404
 
 ```
