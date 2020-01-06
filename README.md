@@ -33,7 +33,11 @@ from pm_scripts import constants, log_filters, utils
 
 log = utils.load_log(constants.IEEE_LOG)
 completed_only_log = log_filters.filter_complete_cases(log)
+
 two_way_log = log_filters.filter_trace_attribute(completed_only_log, constants.INVOICE_TYPE, constants.TWO_WAY_MATCHER)
+three_way_before_log = log_filters.filter_trace_attribute(completed_only_log, constants.INVOICE_TYPE, constants.THREE_WAY_BEFORE_MATCHER)
+three_way_after_log = log_filters.filter_trace_attribute(completed_only_log, constants.INVOICE_TYPE, constants.THREE_WAY_AFTER_MATCHER)
+consignment_log = log_filters.filter_trace_attribute(completed_only_log, constants.INVOICE_TYPE, constants.CONSIGNMENT_MATCHER)
 
 # Show top trace variants
 log_filters.get_top_n_variants(two_way_log)
@@ -50,10 +54,16 @@ log_filters.get_top_n_variants(two_way_log)
 
 ```python
 two_way_log_filtered = log_filters.auto_filter_variants(two_way_log)
+three_way_before_log_filtered = log_filters.auto_filter_variants(three_way_before_log)
+three_way_after_log_filtered = log_filters.auto_filter_variants(three_way_after_log)
+consignment_log_filtered = log_filters.auto_filter_variants(consignment_log)
 
 #Pick your miner (needs more filtering both on logs and during model creation)
 from pm4py.algo.discovery.alpha import factory as alpha_miner
-utils.save_log_to_dot(two_way_log_filtered, alpha_miner, 'two_way_invoice')
+utils.save_log_to_dot(two_way_log_filtered, alpha_miner, 'two_way')
+utils.save_log_to_dot(three_way_before_log_filtered, alpha_miner, 'three_way_before')
+utils.save_log_to_dot(three_way_after_log_filtered, alpha_miner, 'three_way_after')
+utils.save_log_to_dot(consignment_log_filtered, alpha_miner, 'consignment')
 ```
 
 + Mine traces with multiple items for one document
@@ -69,4 +79,26 @@ utils.save_log_to_dot(multi_item_po_log, alpha_miner, 'multi_item_po')
 ```
 
 ### Transform dot to png on host (and view)
-+ ```host$ ./dot2png_pm4py.sh two_way_invoice.dot```
+```
+host$ ./dot2png_pm4py.sh two_way.dot
+host$ ./dot2png_pm4py.sh three_way_before.dot
+host$ ./dot2png_pm4py.sh three_way_after.dot
+host$ ./dot2png_pm4py.sh consignment.dot
+```
+
+
+### Some numbers
+```
+In [4]: len(two_way_log)                                                                                                                                                     
+Out[4]: 169
+
+In [5]: len(three_way_before_log)                                                                                                                                            
+Out[5]: 179318
+
+In [6]: len(three_way_after_log)                                                                                                                                             
+Out[6]: 9560
+
+In [7]: len(consignment_log)                                                                                                                                                 
+Out[7]: 404
+
+```
